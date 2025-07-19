@@ -1,0 +1,7 @@
+﻿services:
+  tictactoebank:
+    image: tictactoebank
+    build:
+      context: .
+      dockerfile: TicTacToeBank/Dockerfile
+
