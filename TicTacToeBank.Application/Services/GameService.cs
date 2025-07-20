@@ -10,11 +10,13 @@ namespace TicTacToeBank.Application.Services;
 public class GameService(IGameRepository gameRepository, 
 	IGameCellRepository gameCellRepository, 
 	IMapper mapper,
-	IConfiguration configuration) {
+	IConfiguration configuration,
+	IRandomProvider randomProvider) {
 	private readonly IGameRepository _gameRepository = gameRepository;
 	private readonly IMapper _mapper = mapper;
 	private readonly IGameCellRepository _gameCellRepository = gameCellRepository;
 	private readonly IConfiguration _configuration = configuration;
+	private readonly IRandomProvider _randomProvider = randomProvider;
 	
 	public async Task<Guid> CreateGameAsync(CreateGameDto game) {
 		if (game == null) throw new ArgumentNullException(nameof(game));
@@ -43,9 +45,8 @@ public class GameService(IGameRepository gameRepository,
 		
 		if (game == null) throw new KeyNotFoundException($"Game with ID {move.GameId} not found.");
 		
-
 		try {
-			var res = game.MakeMove(move.PlayerId, move.Row, move.Column);
+			var res = game.MakeMove(move.PlayerId, move.Row, move.Column, _randomProvider.OpponentSignProbability());
 			var cell = res.affectedCell;
 			var moveSuccessfullyMade = await _gameCellRepository.UpdateAsync(cell);
 			

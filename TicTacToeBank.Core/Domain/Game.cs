@@ -14,7 +14,6 @@ public class Game : IIdentifiable {
 	public int InRowWinCount { get; set; }
 	public DateTime CreatedAt { get; set; }
 	public List<GameCell> Cells { get; set; } = new();
-	private Random _random = new();
 
 	public Game() { }
 	
@@ -60,7 +59,7 @@ public class Game : IIdentifiable {
 			);
 	}
 	
-	public (GameCell affectedCell, GameStatus newGameStatus, string ETag) MakeMove(Guid playerId, int row, int column) {
+	public (GameCell affectedCell, GameStatus newGameStatus, string ETag) MakeMove(Guid playerId, int row, int column, bool sabotage = false) {
 		if (Status != GameStatus.Pending)
 			throw new InvalidOperationException("Cannot make a move in a finished game.");
 		
@@ -89,7 +88,7 @@ public class Game : IIdentifiable {
 		
 		cell.Status = playerId == XPlayerId ? CellStatus.X : CellStatus.O;
 		MovesCount++;
-		if (OpponentSignProbability(cell.Status) && MovesCount % 3 == 0)
+		if (sabotage && MovesCount % 3 == 0)
 			cell.Status = cell.Status == CellStatus.X ? CellStatus.O : CellStatus.X;
 		
 		if (CheckWinCondition(playerId))
@@ -115,6 +114,7 @@ public class Game : IIdentifiable {
 	private bool CheckRowWin(Guid playerId, CellStatus playerStatus) {
 		var inRowCount = 0;
 		for (var i = 0; i < Size; i++) {
+			inRowCount = 0;
 			for (var j = 0; j < Size; j++) {
 				var currentCell = Cells.FirstOrDefault(c => c.Row == i && c.Column == j);
 				if (currentCell?.Status == playerStatus) {
@@ -132,6 +132,7 @@ public class Game : IIdentifiable {
 	private bool CheckColumnWin(Guid playerId, CellStatus playerStatus) {
 		var inRowCount = 0;
 		for (var j = 0; j < Size; j++) {
+			inRowCount = 0;
 			for (var i = 0; i < Size; i++) {
 				var currentCell = Cells.FirstOrDefault(c => c.Row == i && c.Column == j);
 				if (currentCell?.Status == playerStatus) {
@@ -186,15 +187,8 @@ public class Game : IIdentifiable {
 		return false;
 	}
 	
-	// Симуляция 10%-ой вероятности того, что противник поставит свой знак 
-	private bool OpponentSignProbability(CellStatus status) {
-		var rand = _random.Next(0, 10);
-		return rand == 0;
-	}
-	
 	private string ComputeETag(Game game)
 	{
 		return $"\"{game.Id}-{MovesCount}\"";
 	}
-
 }

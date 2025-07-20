@@ -18,6 +18,7 @@ builder.Services.AddDbContext<TicTacToeDbContext>(options => {
 builder.Services.AddScoped<IGameCellRepository, GameCellRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<GameService>();
+builder.Services.AddScoped<IRandomProvider, RandomProvider>();
 
 var app = builder.Build();
 app.MapControllers();

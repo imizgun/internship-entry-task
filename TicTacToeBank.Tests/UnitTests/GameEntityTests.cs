@@ -1,4 +1,6 @@
-﻿using TicTacToeBank.Core.Domain;
+﻿using Moq;
+using TicTacToeBank.Core.Abstraction;
+using TicTacToeBank.Core.Domain;
 using TicTacToeBank.Core.Domain.Enums;
 using TicTacToeBank.Core.Domain.Exceptions;
 using Xunit;
@@ -93,10 +95,8 @@ public class GameEntityTests {
 		
 		// Assert
 		Assert.NotNull(cell);
-		if (game.Status != GameStatus.Pending) {
-			Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
-			Assert.Throws<InvalidOperationException>(() =>  game.MakeMove(oPlayerId, 1, 2));
-		}
+		Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
+		Assert.Throws<InvalidOperationException>(() =>  game.MakeMove(oPlayerId, 1, 2));
 		Assert.Equal(5, game.MovesCount);
 		Assert.Equal(CellStatus.X, moveResult.affectedCell.Status);
 		
@@ -121,13 +121,9 @@ public class GameEntityTests {
 		
 		// Assert
 		Assert.NotNull(cell);
-		if (game.Status == GameStatus.Pending)
-			Assert.Equal(CellStatus.X, cell.Status);
-		else {
-			Assert.Throws<InvalidOperationException>(() =>  game.MakeMove(xPlayerId, 3, 3));
-			Assert.Equal(GameStatus.WonO, moveResult.newGameStatus);
-			Assert.Equal(CellStatus.O, cell.Status);
-		}
+		Assert.Throws<InvalidOperationException>(() =>  game.MakeMove(xPlayerId, 3, 3));
+		Assert.Equal(GameStatus.WonO, moveResult.newGameStatus);
+		Assert.Equal(CellStatus.O, cell.Status);
 		Assert.Equal(6, game.MovesCount);
 	}
 	
@@ -148,18 +144,12 @@ public class GameEntityTests {
 		
 		// Assert
 		Assert.NotNull(cell);
-		if (game.Status == GameStatus.Pending)
-			Assert.Equal(CellStatus.O, cell.Status);
-		else {
-			Assert.Throws<InvalidOperationException>(() => game.MakeMove(xPlayerId, 3, 2));
-			Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
-		}
+		Assert.Throws<InvalidOperationException>(() => game.MakeMove(xPlayerId, 3, 2));
 		Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
 		Assert.Equal(5, game.MovesCount);
 		Assert.Equal(CellStatus.X, moveResult.affectedCell.Status);
 		
 		
-		Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
 		Assert.Equal(5, game.MovesCount);
 		
 		Assert.Equal(CellStatus.X, cell.Status);
@@ -182,12 +172,8 @@ public class GameEntityTests {
 		
 		// Assert
 		Assert.NotNull(cell);
-		if (game.Status == GameStatus.Pending)
-			Assert.Equal(CellStatus.O, cell.Status);
-		else {
-			Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
-			Assert.Throws<InvalidOperationException>(() => game.MakeMove(xPlayerId, 2, 1));
-		}
+		Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
+		Assert.Throws<InvalidOperationException>(() => game.MakeMove(xPlayerId, 2, 1));
 		Assert.Equal(5, game.MovesCount);
 		Assert.Equal(CellStatus.X, moveResult.affectedCell.Status);
 		
@@ -203,27 +189,48 @@ public class GameEntityTests {
 		var game = Game.CreateNew(3, xPlayerId, oPlayerId, 3);
 		
 		// Act
-		game.MakeMove(xPlayerId, 0, 0);
-		game.MakeMove(oPlayerId, 0, 1);
 		game.MakeMove(xPlayerId, 0, 2);
-		game.MakeMove(oPlayerId, 1, 0);
+		game.MakeMove(oPlayerId, 0, 1);
 		game.MakeMove(xPlayerId, 1, 1);
-		game.MakeMove(oPlayerId, 1, 2);
+		game.MakeMove(oPlayerId, 1, 0);
 		var moveResult = game.MakeMove(xPlayerId, 2, 0);
 		var cell = game.Cells.FirstOrDefault(c => c.Row == 0 && c.Column == 2);
 		
 		// Assert
 		Assert.NotNull(cell);
-		if (game.Status == GameStatus.Pending)
-			Assert.Equal(CellStatus.O, cell.Status);
-		else {
-			Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
-			Assert.Throws<InvalidOperationException>(() => game.MakeMove(oPlayerId, 2, 2));
-		}
 		Assert.Equal(GameStatus.WonX, moveResult.newGameStatus);
-		Assert.Equal(7, game.MovesCount);
+		Assert.Throws<InvalidOperationException>(() => game.MakeMove(oPlayerId, 2, 2));
+		Assert.Equal(5, game.MovesCount);
 		
 		Assert.Equal(CellStatus.X, cell.Status);
+	}
+	
+	[Fact]
+	public void DrawGame_Test() {
+		// Arrange
+		var xPlayerId = Guid.NewGuid();
+		var oPlayerId = Guid.NewGuid();
+		var game = Game.CreateNew(3, xPlayerId, oPlayerId, 3);
 		
+		// Act
+		game.MakeMove(xPlayerId, 0, 0);
+		game.MakeMove(oPlayerId, 0, 1);
+		game.MakeMove(xPlayerId, 0, 2);
+		game.MakeMove(oPlayerId, 1, 1);
+		game.MakeMove(xPlayerId, 1, 0);
+		game.MakeMove(oPlayerId, 2, 0);
+		game.MakeMove(xPlayerId, 1, 2);
+		game.MakeMove(oPlayerId, 2, 2);
+		var moveResult = game.MakeMove(xPlayerId, 2, 1);
+		
+		// Assert
+		Assert.Equal(GameStatus.Draw, moveResult.newGameStatus);
+		Assert.Equal(9, game.MovesCount);
+		
+		foreach (var cell in game.Cells) {
+			Assert.NotEqual(CellStatus.Empty, cell.Status);
+		}
+		
+		Assert.Throws<InvalidOperationException>(() => game.MakeMove(oPlayerId, 2, 2));
 	}
 }
