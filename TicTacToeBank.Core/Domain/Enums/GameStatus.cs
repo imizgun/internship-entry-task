@@ -3,6 +3,6 @@
 public enum GameStatus {
 	Pending,
 	Draw,
-	WinX,
-	WinO
+	WonX,
+	WonO
 }

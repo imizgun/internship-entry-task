@@ -8,16 +8,17 @@ namespace TicTacToeBank.DatabaseAccess.Repositories;
 public class GameCellRepository : BaseRepository<GameCell>, IGameCellRepository {
 	public GameCellRepository(TicTacToeDbContext dbContext) : base(dbContext) { }
 
-	public async Task<Guid> CreateAsync(GameCell gameCell) {
-		await DbContext.AddAsync(gameCell);
-
-		var res = await DbContext.SaveChangesAsync();
-		return res > 0 ? gameCell.Id : Guid.Empty;
-	}
-
 	public override async Task<GameCell?> GetByIdAsync(Guid id) {
 		return await TypeSet
 			.Include(x => x.Game)
 			.FirstOrDefaultAsync(x => x.Id == id);
+	}
+
+	public override async Task<bool> UpdateAsync(GameCell entity) {
+		var res = await TypeSet.Where(x => x.Id == entity.Id)
+			.ExecuteUpdateAsync(p => 
+				p.SetProperty(x => x.Status, entity.Status));
+		
+		return res > 0;
 	}
 }

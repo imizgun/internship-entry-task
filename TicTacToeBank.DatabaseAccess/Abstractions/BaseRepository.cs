@@ -3,7 +3,7 @@ using TicTacToeBank.Core.Abstraction;
 
 namespace TicTacToeBank.DatabaseAccess.Abstractions;
 
-public class BaseRepository<T> : IBaseRepository<T> where T : class, IIdentifiable {
+public abstract class BaseRepository<T> : IBaseRepository<T> where T : class, IIdentifiable {
 	protected readonly DbSet<T> TypeSet;
 	protected readonly TicTacToeDbContext DbContext;
 	
@@ -15,4 +15,6 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class, IIdentifiab
 	public virtual async Task<T?> GetByIdAsync(Guid id) {
 		return await TypeSet.FindAsync(id);
 	}
+
+	public abstract Task<bool> UpdateAsync(T entity);
 }

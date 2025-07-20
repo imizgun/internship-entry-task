@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeBank.Core", "TicTa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeBank.DatabaseAccess", "TicTacToeBank.DatabaseAccess\TicTacToeBank.DatabaseAccess.csproj", "{9A554412-D8D6-470B-919D-4DDB8CC53404}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeBank.Application", "TicTacToeBank.Application\TicTacToeBank.Application.csproj", "{DBCE03CB-116A-4193-9792-4074B4868073}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicTacToeBank.Tests", "TicTacToeBank.Tests\TicTacToeBank.Tests.csproj", "{BF5E13B3-F3D7-4003-9DAA-178DC7FB139A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +33,13 @@ Global
 		{9A554412-D8D6-470B-919D-4DDB8CC53404}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A554412-D8D6-470B-919D-4DDB8CC53404}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A554412-D8D6-470B-919D-4DDB8CC53404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBCE03CB-116A-4193-9792-4074B4868073}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBCE03CB-116A-4193-9792-4074B4868073}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBCE03CB-116A-4193-9792-4074B4868073}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBCE03CB-116A-4193-9792-4074B4868073}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF5E13B3-F3D7-4003-9DAA-178DC7FB139A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF5E13B3-F3D7-4003-9DAA-178DC7FB139A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF5E13B3-F3D7-4003-9DAA-178DC7FB139A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF5E13B3-F3D7-4003-9DAA-178DC7FB139A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
