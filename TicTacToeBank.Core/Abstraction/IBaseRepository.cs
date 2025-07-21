@@ -1,6 +1,7 @@
 ﻿namespace TicTacToeBank.Core.Abstraction;
 
-public interface IBaseRepository<T> where T : class, IIdentifiable {
-	Task<T?> GetByIdAsync(Guid id);
-	Task<bool> UpdateAsync(T entity);
+public interface IBaseRepository<T> where T : class, IIdentifiable
+{
+    Task<T?> GetByIdAsync(Guid id);
+    Task<bool> UpdateAsync(T entity);
 }

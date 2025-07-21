@@ -5,15 +5,18 @@ using Xunit.Abstractions;
 
 namespace TicTacToeBank.Tests.IntegrationTest;
 
-public class BaseIntegrationTest : IClassFixture<IntegrationTestWebFactory> {
-	protected readonly HttpClient Client;
-	protected readonly ITestOutputHelper Output;
-	protected readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions {
-		PropertyNameCaseInsensitive = true,
-	};
-	
-	public BaseIntegrationTest(IntegrationTestWebFactory factory, ITestOutputHelper output) {
-		Client = factory.CreateClient();
-		Output = output;
-	}
+public class BaseIntegrationTest : IClassFixture<IntegrationTestWebFactory>
+{
+    protected readonly HttpClient Client;
+    protected readonly ITestOutputHelper Output;
+    protected readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
+    public BaseIntegrationTest(IntegrationTestWebFactory factory, ITestOutputHelper output)
+    {
+        Client = factory.CreateClient();
+        Output = output;
+    }
 }
