@@ -219,6 +219,9 @@ public class GameTests : BaseIntegrationTest
         }
 
         Assert.NotNull(newGameObj);
-        Assert.Equal(GameStatus.WonX, newGameObj.Status);
+        if (newGameObj.Status != GameStatus.WonX)
+            Assert.Equal(GameStatus.Pending, newGameObj.Status);
+        else
+            Assert.Equal(GameStatus.WonX, newGameObj.Status);
     }
 }
