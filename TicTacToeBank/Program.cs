@@ -12,8 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapperProfile>());
-builder.Services.AddDbContext<TicTacToeDbContext>(options => {
-	options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(TicTacToeDbContext)));
+builder.Services.AddDbContext<TicTacToeDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString(nameof(TicTacToeDbContext)));
 });
 builder.Services.AddScoped<IGameCellRepository, GameCellRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
@@ -21,14 +22,24 @@ builder.Services.AddScoped<GameService>();
 builder.Services.AddScoped<IRandomProvider, RandomProvider>();
 
 var app = builder.Build();
+app.UseRouting();
 app.MapControllers();
 
-if (app.Environment.IsDevelopment()) {
-	app.MapOpenApi();
-	app.UseSwagger();
-	app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<TicTacToeDbContext>();
+    dbContext.Database.Migrate();
+}
+
+// app.UseHttpsRedirection();
 
 app.Run();
+
+public partial class Program { }

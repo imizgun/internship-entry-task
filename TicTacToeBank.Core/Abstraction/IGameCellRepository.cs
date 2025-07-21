@@ -2,5 +2,6 @@
 
 namespace TicTacToeBank.Core.Abstraction;
 
-public interface IGameCellRepository : IBaseRepository<GameCell> {
+public interface IGameCellRepository : IBaseRepository<GameCell>
+{
 }

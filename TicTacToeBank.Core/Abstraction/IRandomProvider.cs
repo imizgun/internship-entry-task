@@ -2,5 +2,5 @@
 
 public interface IRandomProvider
 {
-	bool OpponentSignProbability();
+    bool OpponentSignProbability();
 }
